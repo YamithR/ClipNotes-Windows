@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClipNotes</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="window-bar" id="windowBar">
+    <span class="window-title">ClipNotes</span>
+    <div class="window-controls">
+      <span id="settingsBtn" class="ctrl-btn" title="Configuración">⚙</span>
+      <span id="closeBtn" class="ctrl-btn close" title="Cerrar">&times;</span>
+    </div>
+  </div>
+
+  <div class="container">
+    <div id="headerBar" class="header-bar hidden">
+      <button id="backBtn" class="nav-btn">← Volver</button>
+      <span id="currentDir" class="dir-label"></span>
+    </div>
+
+    <div id="noFolder" class="no-folder">
+      <div class="nf-icon">📋</div>
+      <div class="nf-text">Selecciona una carpeta con notas</div>
+      <button id="selectFolderBtn" class="primary-btn">Seleccionar carpeta</button>
+    </div>
+
+    <div id="fileList" class="file-list hidden"></div>
+
+    <div id="toast" class="toast hidden"></div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

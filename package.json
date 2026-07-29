@@ -1,0 +1,53 @@
+{
+  "name": "clipnotes-windows",
+  "version": "1.0.0",
+  "description": "ClipNotes - Copy text notes to clipboard via a system tray icon. Windows port of gnome-extension-copier",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:win": "electron-builder --win msi",
+    "build:win-portable": "electron-builder --win portable"
+  },
+  "author": {
+    "name": "Yamith Romero",
+    "email": "yamithr@users.noreply.github.com"
+  },
+  "license": "MIT",
+  "build": {
+    "appId": "com.yamithr.clipnotes",
+    "productName": "ClipNotes",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "preload.js",
+      "renderer/**/*",
+      "config.json",
+      "assets/**/*"
+    ],
+    "win": {
+      "target": [
+        "msi"
+      ],
+      "icon": "assets/icon.png",
+      "artifactName": "ClipNotes_${version}_win64.${ext}",
+      "signAndEditExecutable": false
+    },
+    "msi": {
+      "oneClick": false,
+      "perMachine": true,
+      "runAfterFinish": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "ClipNotes"
+    },
+    "extraResources": [
+      "assets/**"
+    ]
+  },
+  "devDependencies": {
+    "electron": "^35.7.5",
+    "electron-builder": "^25.1.8"
+  }
+}
