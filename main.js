@@ -258,7 +258,7 @@ ipcMain.handle('get-app-info', () => ({
   version: '1.1.0',
   description: 'Copia notas de texto al portapapeles desde la bandeja del sistema',
   author: 'Yamith Romero',
-  email: 'yamithr@users.noreply.github.com',
+  email: 'yamithromero@hotmail.com',
   github: 'https://github.com/YamithR',
   repo: 'https://github.com/YamithR/ClipNotes-Windows'
 }));
