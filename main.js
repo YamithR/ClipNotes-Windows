@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Tray, Menu, nativeImage, ipcMain, screen, dialog, clipboard } = require('electron');
+const { app, BrowserWindow, Tray, Menu, nativeImage, ipcMain, screen, dialog, clipboard, globalShortcut } = require('electron');
 const path = require('path');
 const fs = require('fs');
 
@@ -23,8 +23,9 @@ function loadConfig() {
     path: '',
     strip: true,
     'always-on-top': true,
-    'window-width': 320,
-    'window-height': 400
+    'window-width': 360,
+    'window-height': 450,
+    'shortcut-key': 'Ctrl+Shift+N'
   };
   for (const [key, val] of Object.entries(defaults)) {
     if (config[key] === undefined) config[key] = val;
@@ -52,13 +53,15 @@ function createWindow() {
   }
 
   mainWindow = new BrowserWindow({
-    width: config['window-width'] || 320,
-    height: config['window-height'] || 400,
-    x: workArea.width - (config['window-width'] || 320) - 20,
+    width: config['window-width'] || 360,
+    height: config['window-height'] || 450,
+    minWidth: 300,
+    minHeight: 300,
+    x: workArea.width - (config['window-width'] || 360) - 20,
     y: 60,
     frame: false,
     transparent: true,
-    resizable: false,
+    resizable: true,
     skipTaskbar: true,
     alwaysOnTop: config['always-on-top'] !== false,
     show: false,
@@ -71,6 +74,13 @@ function createWindow() {
   });
 
   mainWindow.loadFile(path.join(__dirname, 'renderer', 'index.html'));
+
+  mainWindow.on('resize', () => {
+    const [w, h] = mainWindow.getSize();
+    config['window-width'] = w;
+    config['window-height'] = h;
+    saveConfig();
+  });
 
   mainWindow.on('blur', () => {
     if (!mainWindow?.isFocused()) {
@@ -109,7 +119,11 @@ function createTray() {
   let trayIcon;
   try {
     const img = nativeImage.createFromPath(iconPath);
-    trayIcon = img.isEmpty() ? nativeImage.createEmpty() : img.resize({ width: 32, height: 32 });
+    if (!img.isEmpty()) {
+      trayIcon = img.resize({ width: 16, height: 16 });
+    } else {
+      trayIcon = nativeImage.createEmpty();
+    }
   } catch {
     trayIcon = nativeImage.createEmpty();
   }
@@ -132,6 +146,22 @@ function createTray() {
           config.path = result.filePaths[0];
           saveConfig();
         }
+      }
+    },
+    {
+      label: 'Configurar atajo...',
+      click: () => {
+        if (!mainWindow) createWindow();
+        mainWindow.webContents.send('open-settings');
+        showWindow();
+      }
+    },
+    {
+      label: 'Acerca de...',
+      click: () => {
+        if (!mainWindow) createWindow();
+        mainWindow.webContents.send('open-about');
+        showWindow();
       }
     },
     { type: 'separator' },
@@ -219,13 +249,48 @@ ipcMain.handle('select-folder', async () => {
   return null;
 });
 
+ipcMain.handle('set-shortcut', (event, shortcut) => {
+  config['shortcut-key'] = shortcut;
+  saveConfig();
+  registerShortcut();
+  return true;
+});
+
+ipcMain.handle('get-app-info', () => ({
+  name: 'ClipNotes',
+  version: '1.0.0',
+  description: 'Copia notas de texto al portapapeles desde la bandeja del sistema',
+  author: 'Yamith Romero',
+  email: 'yamithr@users.noreply.github.com',
+  github: 'https://github.com/YamithR/ClipNotes-Windows',
+  repo: 'https://github.com/YamithR/ClipNotes-Windows'
+}));
+
+function registerShortcut() {
+  globalShortcut.unregisterAll();
+  const shortcut = config['shortcut-key'] || 'Ctrl+Shift+N';
+  try {
+    globalShortcut.register(shortcut, () => showWindow());
+  } catch (e) {
+    console.error('Failed to register shortcut:', e);
+  }
+}
+
 app.whenReady().then(() => {
   loadConfig();
   createWindow();
   createTray();
+  registerShortcut();
 });
 
-app.on('will-quit', () => {});
+app.on('will-quit', () => {
+  globalShortcut.unregisterAll();
+});
+
+ipcMain.on('close-app', () => {
+  isQuitting = true;
+  app.quit();
+});
 
 app.on('window-all-closed', () => {});
 

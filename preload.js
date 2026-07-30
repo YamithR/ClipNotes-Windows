@@ -6,5 +6,10 @@ contextBridge.exposeInMainWorld('clipnotes', {
   getConfig: () => ipcRenderer.invoke('get-config'),
   setConfig: (updates) => ipcRenderer.invoke('set-config', updates),
   selectFolder: () => ipcRenderer.invoke('select-folder'),
-  onRefresh: (callback) => ipcRenderer.on('refresh', () => callback())
+  setShortcut: (shortcut) => ipcRenderer.invoke('set-shortcut', shortcut),
+  getAppInfo: () => ipcRenderer.invoke('get-app-info'),
+  onRefresh: (callback) => ipcRenderer.on('refresh', () => callback()),
+  onOpenSettings: (callback) => ipcRenderer.on('open-settings', () => callback()),
+  onOpenAbout: (callback) => ipcRenderer.on('open-about', () => callback()),
+  closeApp: () => ipcRenderer.send('close-app')
 });

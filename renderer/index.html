@@ -11,6 +11,7 @@
     <span class="window-title">ClipNotes</span>
     <div class="window-controls">
       <span id="settingsBtn" class="ctrl-btn" title="Configuración">⚙</span>
+      <span id="infoBtn" class="ctrl-btn" title="Acerca de">ⓘ</span>
       <span id="closeBtn" class="ctrl-btn close" title="Cerrar">&times;</span>
     </div>
   </div>
@@ -30,6 +31,48 @@
     <div id="fileList" class="file-list hidden"></div>
 
     <div id="toast" class="toast hidden"></div>
+  </div>
+
+  <div id="settingsModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>Configuración</span>
+        <span class="modal-close" id="settingsClose">&times;</span>
+      </div>
+      <div class="modal-body">
+        <div class="setting-row">
+          <label>Atajo de teclado</label>
+          <input type="text" id="shortcutInput" class="shortcut-input" readonly
+                 placeholder="Presiona una tecla..."
+                 value="Ctrl+Shift+N">
+          <button id="shortcutBtn" class="modal-btn">Cambiar</button>
+        </div>
+        <div class="setting-row">
+          <label>Carpeta de notas</label>
+          <button id="changeFolderBtn" class="modal-btn">Cambiar carpeta</button>
+        </div>
+        <div class="setting-row">
+          <label>Ocultar extensiones</label>
+          <input type="checkbox" id="stripToggle">
+        </div>
+        <div class="setting-row">
+          <label>Siempre al frente</label>
+          <input type="checkbox" id="ontopToggle">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="aboutModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span>Acerca de ClipNotes</span>
+        <span class="modal-close" id="aboutClose">&times;</span>
+      </div>
+      <div class="modal-body about-body">
+        <div id="aboutContent"></div>
+      </div>
+    </div>
   </div>
 
   <script src="app.js"></script>
