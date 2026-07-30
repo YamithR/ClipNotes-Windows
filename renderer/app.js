@@ -1,6 +1,7 @@
 let config = {};
 let currentPath = '';
 let listeningForShortcut = false;
+let toastTimer = null;
 
 const elems = {
   windowBar: document.getElementById('windowBar'),
@@ -34,14 +35,6 @@ async function init() {
     await loadFolder(currentPath);
   }
   setupEventListeners();
-  syncWindowSize();
-}
-
-function syncWindowSize() {
-  if (config['window-width'] && config['window-height']) {
-    document.body.style.width = config['window-width'] + 'px';
-    document.body.style.height = config['window-height'] + 'px';
-  }
 }
 
 async function loadFolder(dirPath) {
@@ -102,9 +95,13 @@ async function copyFileContent(filePath) {
 }
 
 function showToast(msg) {
+  if (toastTimer) clearTimeout(toastTimer);
   elems.toast.textContent = msg;
   elems.toast.classList.remove('hidden');
-  setTimeout(() => elems.toast.classList.add('hidden'), 2000);
+  toastTimer = setTimeout(() => {
+    elems.toast.classList.add('hidden');
+    toastTimer = null;
+  }, 2000);
 }
 
 function esc(s) {
@@ -205,7 +202,11 @@ function setupEventListeners() {
   clipnotes.onOpenSettings(() => openSettings());
   clipnotes.onOpenAbout(() => openAbout());
   clipnotes.onRefresh(() => {
-    syncWindowSize();
+    if (currentPath) loadFolder(currentPath);
+  });
+  clipnotes.onConfigChanged((newPath) => {
+    currentPath = newPath;
+    config.path = newPath;
     if (currentPath) loadFolder(currentPath);
   });
 }

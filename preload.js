@@ -11,5 +11,6 @@ contextBridge.exposeInMainWorld('clipnotes', {
   onRefresh: (callback) => ipcRenderer.on('refresh', () => callback()),
   onOpenSettings: (callback) => ipcRenderer.on('open-settings', () => callback()),
   onOpenAbout: (callback) => ipcRenderer.on('open-about', () => callback()),
+  onConfigChanged: (callback) => ipcRenderer.on('config-changed', (e, p) => callback(p)),
   closeApp: () => ipcRenderer.send('close-app')
 });

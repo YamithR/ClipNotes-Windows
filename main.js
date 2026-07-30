@@ -107,7 +107,7 @@ function showWindow() {
     return;
   }
   const workArea = screen.getPrimaryDisplay().workAreaSize;
-  const winWidth = config['window-width'] || 320;
+  const winWidth = config['window-width'] || 360;
   mainWindow.setPosition(workArea.width - winWidth - 20, 60);
   mainWindow.show();
   mainWindow.focus();
@@ -141,6 +141,7 @@ function createTray() {
         if (!result.canceled && result.filePaths.length > 0) {
           config.path = result.filePaths[0];
           saveConfig();
+          if (mainWindow) mainWindow.webContents.send('config-changed', config.path);
         }
       }
     },
