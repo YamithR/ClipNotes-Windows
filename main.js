@@ -115,15 +115,11 @@ function showWindow() {
 }
 
 function createTray() {
-  const iconPath = path.join(__dirname, 'assets', 'icon.ico');
+  const iconPath = path.join(__dirname, 'assets', 'tray-icon.png');
   let trayIcon;
   try {
     const img = nativeImage.createFromPath(iconPath);
-    if (!img.isEmpty()) {
-      trayIcon = img.resize({ width: 16, height: 16 });
-    } else {
-      trayIcon = nativeImage.createEmpty();
-    }
+    trayIcon = img.isEmpty() ? nativeImage.createEmpty() : img.resize({ width: 16, height: 16 });
   } catch {
     trayIcon = nativeImage.createEmpty();
   }
@@ -258,11 +254,11 @@ ipcMain.handle('set-shortcut', (event, shortcut) => {
 
 ipcMain.handle('get-app-info', () => ({
   name: 'ClipNotes',
-  version: '1.0.0',
+  version: '1.1.0',
   description: 'Copia notas de texto al portapapeles desde la bandeja del sistema',
   author: 'Yamith Romero',
   email: 'yamithr@users.noreply.github.com',
-  github: 'https://github.com/YamithR/ClipNotes-Windows',
+  github: 'https://github.com/YamithR',
   repo: 'https://github.com/YamithR/ClipNotes-Windows'
 }));
 

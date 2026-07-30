@@ -74,16 +74,16 @@ function showFiles(folders, files) {
   for (const f of folders) {
     const item = document.createElement('div');
     item.className = 'file-item folder';
-    item.innerHTML = `<span class="fi-icon">📁</span><span class="fi-name">${esc(f)}</span>`;
-    item.addEventListener('click', () => loadFolder(currentPath + '/' + f));
+    item.innerHTML = `<span class="fi-icon">📁</span><span class="fi-name">${esc(f.name)}</span>`;
+    item.addEventListener('click', () => loadFolder(f.path));
     list.appendChild(item);
   }
   for (const f of files) {
     const item = document.createElement('div');
     item.className = 'file-item file';
-    const displayName = config.strip ? f.replace(/\.\w+$/, '') : f;
+    const displayName = config.strip ? f.name.replace(/\.\w+$/, '') : f.name;
     item.innerHTML = `<span class="fi-icon">📄</span><span class="fi-name">${esc(displayName)}</span><span class="fi-preview"></span>`;
-    item.addEventListener('click', () => copyFileContent(currentPath + '/' + f));
+    item.addEventListener('click', () => copyFileContent(f.path));
     list.appendChild(item);
   }
 }
@@ -229,6 +229,8 @@ async function openAbout() {
     <div class="ab-section">Desarrollador</div>
     <div>${esc(info.author)}</div>
     <div><a href="mailto:${esc(info.email)}" class="ab-link">${esc(info.email)}</a></div>
+    <div class="ab-section">GitHub</div>
+    <div><a href="${esc(info.github)}" class="ab-link" target="_blank">${esc(info.github)}</a></div>
     <div class="ab-section">Repositorio</div>
     <div><a href="${esc(info.repo)}" class="ab-link" target="_blank">${esc(info.repo)}</a></div>
   `;
